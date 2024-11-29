@@ -101,6 +101,7 @@ streamlit run app/main.py
 * **Data Deletion**: Users can delete their data via the chatbot interface.
 * **Compliance**: Designed to follow privacy best practices and HIPAA-level compliance.
 
+![chat5_page-0001](https://github.com/user-attachments/assets/7c64b976-f119-4554-95c5-6fdbe07ccddc)
 
 
 
