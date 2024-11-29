@@ -116,11 +116,4 @@ Feel free to fork this repository, create issues, or submit pull requests to imp
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 
-## Contact
 
-Your Name - [Your Email]
-
-Project Link: [https://github.com/yourusername/mental_health_chatbot](https://github.com/yourusername/mental_health_chatbot)
-
-
-give me above in my markdown to put in my readme in github
