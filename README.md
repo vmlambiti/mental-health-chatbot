@@ -70,7 +70,6 @@ mental_health_chatbot/
 ### Prerequisites
 * Python 3.9 or later
 * Required Python libraries (in `requirements.txt`)
-* Docker (optional for containerization)
 
 ### Installation
 
@@ -102,15 +101,6 @@ streamlit run app/main.py
 * **Data Deletion**: Users can delete their data via the chatbot interface.
 * **Compliance**: Designed to follow privacy best practices and HIPAA-level compliance.
 
-## Contributing
-
-Feel free to fork this repository, create issues, or submit pull requests to improve the chatbot. Please follow these steps:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 
 
