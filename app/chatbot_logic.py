@@ -9,7 +9,9 @@ import google.generativeai as genai
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-FAQS_PATH = os.getenv("FAQS_PATH")
+# FAQS_PATH = os.getenv("FAQS_PATH")
+DATA_PATH = os.getenv("DATA_PATH", "data/")
+FAQS_PATH = os.path.join(DATA_PATH, "faqs.csv")
 genai.configure(api_key=GEMINI_API_KEY)
 
 def initialize_session_state():
