@@ -36,3 +36,48 @@ mental_health_chatbot/
 ├── .env                 # Environment variables
 ├── README.md            # Project documentation
 └── .gitignore           # Ignored files
+
+## Technologies Used
+- **Streamlit**: User-friendly web interface for real-time chatbot interactions.
+- **FAISS**: Fast and efficient retrieval of contextually similar responses.
+- **Sentence Transformers**: For generating embeddings from user input.
+- **Google Generative AI (Gemini)**: To generate empathetic and helpful responses.
+- **Encryption (Fernet)**: Ensures secure storage of sensitive user data.
+- **Few-Shot Learning**: Enhances the chatbot’s performance with example-based learning.
+
+---
+
+## How It Works
+
+### User Interaction
+- Users provide their name, age group, and specific concerns.
+- Previous interactions are retrieved for context.
+
+### Query Processing
+- User input is processed and embedded using Sentence Transformers.
+- FAISS retrieves relevant responses from a dataset of mental health exchanges.
+
+### Response Generation
+- A tailored prompt is constructed using user details, retrieved responses, and few-shot examples.
+- Google Generative AI generates a context-aware, empathetic response.
+
+### Secure Data Handling
+- **Encrypted Data**: User concerns are encrypted before storage.
+- **Data Access**: Data is easily accessible and deletable by the user.
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Python 3.9 or later
+- Required Python libraries (in `requirements.txt`)
+- Docker (optional for containerization)
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/mental_health_chatbot.git
+   cd mental_health_chatbot
+
