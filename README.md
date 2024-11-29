@@ -37,6 +37,8 @@ mental_health_chatbot/
 ├── README.md            # Project documentation
 └── .gitignore           # Ignored files
 
+---
+
 ## Technologies Used
 - **Streamlit**: User-friendly web interface for real-time chatbot interactions.
 - **FAISS**: Fast and efficient retrieval of contextually similar responses.
