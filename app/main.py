@@ -35,7 +35,7 @@ def display_chat_history():
         submit_button = st.form_submit_button(label="Send")
 
         if submit_button and user_input:
-            response = conversation_chat(user_input, data, index, model, g_model)
+            response = conversation_chat(user_input, data, index, model, g_model,cipher)
             st.session_state['history'].append(("You", user_input))
             st.session_state['history'].append(("Chatbot", response))
 
