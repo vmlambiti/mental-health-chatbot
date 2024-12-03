@@ -78,6 +78,17 @@ def delete_user_data(username):
     else:
         st.sidebar.warning("No data found for this user.")
 
+def get_similar_responses(query,data, index, model, top_k=3):
+    # Convert the query into an embedding
+    query_embedding = model.encode(query).astype('float32').reshape(1, -1)
+    
+    # Perform the FAISS search to get top-k similar responses
+    distances, indices = index.search(query_embedding, top_k)  # Get top k similar responses from FAISS index
+    
+    # Get the actual responses based on the indices returned by FAISS
+    similar_responses = data.iloc[indices[0]]['answerText'].tolist()
+    return similar_responses
+
 def conversation_chat(query, data, index, model, g_model, cipher):
     user_profile = st.session_state.get("user_profile", {})
     username = user_profile.get("name", "User")
@@ -100,7 +111,8 @@ def conversation_chat(query, data, index, model, g_model, cipher):
         f"User: {entry['user']}\nBot: {entry['bot']}"
         for entry in st.session_state['chat_memory']
     ])
-
+    retrieved_responses = get_similar_responses(query,data, index, model, top_k=3)
+    retrieved_context = "\n".join([f"Response {i+1}: {response}" for i, response in enumerate(retrieved_responses)])
     # Construct the prompt
     prompt = f"""
     {SYSTEM_PROMPT_GENERAL}
@@ -121,7 +133,10 @@ def conversation_chat(query, data, index, model, g_model, cipher):
 
     User's Question: {query}
 
-    Please provide an empathetic and helpful response tailored to the user's profile, concerns, and question.
+    Relevant responses:
+    {retrieved_context}
+
+    Please provide an empathetic and helpful response tailored to the user's profile, concerns,Relevant responses and question.
     """
 
     # Generate response
