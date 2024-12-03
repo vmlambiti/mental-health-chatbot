@@ -9,7 +9,6 @@ import google.generativeai as genai
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-# FAQS_PATH = os.getenv("FAQS_PATH")
 DATA_PATH = os.getenv("DATA_PATH", "data/")
 FAQS_PATH = os.path.join(DATA_PATH, "faqs.csv")
 genai.configure(api_key=GEMINI_API_KEY)
@@ -48,6 +47,7 @@ def collect_user_profile(cipher):
             }
             st.session_state['greeted'] = False  # Reset greeting status
 
+    # Display Previous Concerns & Option to Clear Data
     if username:
         user_memory = load_user_memory()
         concerns = user_memory.get(username, [])
@@ -61,6 +61,12 @@ def collect_user_profile(cipher):
                 delete_user_data(username)
                 st.sidebar.success("Your data has been deleted.")
                 st.session_state['greeted'] = False  # Reset greeting on deletion
+
+            # Add End Session Button
+            if st.sidebar.button("End Session"):
+                st.session_state['history'] = []  # Clear session history
+                st.session_state['chat_memory'] = []  # Clear chat memory
+                st.sidebar.success("Session ended successfully.")
         else:
             st.sidebar.info("You have no saved concerns.")
 
