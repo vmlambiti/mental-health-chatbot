@@ -1,8 +1,8 @@
-streamlit>=1.25.0
+streamlit
+firebase-admin
 pandas
-numpy
-sentence-transformers
 faiss-cpu
-python-dotenv
+sentence-transformers
 cryptography
+python-dotenv
 google-generativeai

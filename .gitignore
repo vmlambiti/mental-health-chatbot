@@ -1,2 +1,10 @@
-# Ignore the .env file
-.env
+# Ignore the Firebase secret
+serviceAccountKey.json
+
+# Ignore Python environment files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.venv/

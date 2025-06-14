@@ -1,14 +1,14 @@
+
 from setuptools import setup, find_packages
 
 setup(
     name="mental_health_chatbot",
     version="1.0.0",
     author="Jwalith Kristam",
-    author_email="jwalithkristam@gmail.com",
+    author_email="vmlambiti@gmail.com",
     description="A mental health support chatbot built with Streamlit, FAISS, and Google Generative AI.",
-    long_description=open("README.md").read(),
-    long_description_content_type="text/markdown",
-    url="https://github.com/jwalith/mental_health_chatbot",
+    
+
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
