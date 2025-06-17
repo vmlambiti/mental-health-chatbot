@@ -9,17 +9,16 @@ from data_loader import load_resources, load_encryption_key
 from chatbot_logic import conversation_chat, collect_user_profile, display_faqs
 
 import json
+firebase_key = dict(st.secrets["firebase"])   # ← define this FIRST
 
-# ✅ Firebase Admin SDK setup — USE SECRETS ONLY for Cloud
+# ✅ INITIALIZE FIREBASE ADMIN ONLY ONCE
 if not firebase_admin._apps:
-    # Load Firebase credentials from Streamlit secrets (secure!)
-    firebase_key = dict(st.secrets["firebase"])
-cred = credentials.Certificate(firebase_key)
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
+    cred = credentials.Certificate(firebase_key)
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
     })
 
-# ✅ Load NLP resources
+# ✅ NLP Resources
 data, index, model, g_model = load_resources()
 cipher = load_encryption_key()
 
