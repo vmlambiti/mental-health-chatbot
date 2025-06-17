@@ -8,18 +8,22 @@ import streamlit as st
 from data_loader import load_resources, load_encryption_key
 from chatbot_logic import conversation_chat, collect_user_profile, display_faqs
 
-# Firebase Admin SDK setup
+import json
+
+# ✅ Firebase Admin SDK setup — USE SECRETS ONLY for Cloud
 if not firebase_admin._apps:
-    cred = credentials.Certificate("serviceAccountKey.json")
+    # Load Firebase credentials from Streamlit secrets (secure!)
+    firebase_key = json.loads(st.secrets["firebase"].to_json())
+    cred = credentials.Certificate(firebase_key)
     firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
     })
 
-# Load NLP resources
+# ✅ Load NLP resources
 data, index, model, g_model = load_resources()
 cipher = load_encryption_key()
 
-# Streamlit config
+# ✅ Streamlit page config
 st.set_page_config(
     page_title="Mental Health Support Chatbot",
     page_icon="🧠",
