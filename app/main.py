@@ -13,10 +13,10 @@ import json
 # ✅ Firebase Admin SDK setup — USE SECRETS ONLY for Cloud
 if not firebase_admin._apps:
     # Load Firebase credentials from Streamlit secrets (secure!)
-    firebase_key = json.loads(json.dumps(st.secrets["firebase"]))
-    cred = credentials.Certificate(firebase_key)
-    firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
+    firebase_key = dict(st.secrets["firebase"])
+cred = credentials.Certificate(firebase_key)
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
     })
 
 # ✅ Load NLP resources
