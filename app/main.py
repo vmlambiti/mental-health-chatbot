@@ -50,6 +50,10 @@ def display_chat_history():
         st.session_state['user_profile'] = {}
     if 'greeted' not in st.session_state:
         st.session_state['greeted'] = False
+    if 'history' not in st.session_state:
+        st.session_state['history'] = []
+    if 'chat_memory' not in st.session_state:
+        st.session_state['chat_memory'] = []  # ✅ FIX: safe to prevent KeyError!
 
     # ✅ Step 1: Collect user profile to get user_id
     collect_user_profile(cipher)
@@ -57,7 +61,7 @@ def display_chat_history():
     user_id = user_profile.get("name", "anonymous").replace(" ", "_").lower()
 
     # ✅ Step 2: Load chat history from Firebase ONCE
-    if 'history' not in st.session_state:
+    if not st.session_state['history']:
         st.session_state['history'] = load_chat_history(user_id)
 
     # ✅ Step 3: Display FAQs
