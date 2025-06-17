@@ -140,7 +140,10 @@ def conversation_chat(query, data, index, model, g_model, cipher):
     """
 
     # Generate response
-    response = g_model.generate_content(prompt, generation_config={"timeout": 50})
+    response = g_model.generate_content(
+    prompt,
+    request_options={"timeout": 30}
+)
 
     validated_response = response.text.strip()
 
