@@ -90,6 +90,9 @@ def get_similar_responses(query,data, index, model, top_k=3):
     return similar_responses
 
 def conversation_chat(query, data, index, model, g_model, cipher):
+    import streamlit as st
+    import google.api_core.exceptions
+
     user_profile = st.session_state.get("user_profile", {})
     username = user_profile.get("name", "User")
     age_group = user_profile.get("age_group", "Not specified")
@@ -109,11 +112,16 @@ def conversation_chat(query, data, index, model, g_model, cipher):
     # Chat history
     chat_history = "\n".join([
         f"User: {entry['user']}\nBot: {entry['bot']}"
-        for entry in st.session_state['chat_memory']
+        for entry in st.session_state.get('chat_memory', [])
     ])
-    retrieved_responses = get_similar_responses(query,data, index, model, top_k=3)
-    retrieved_context = "\n".join([f"Response {i+1}: {response}" for i, response in enumerate(retrieved_responses)])
-    # Construct the prompt
+
+    # Retrieve similar responses
+    retrieved_responses = get_similar_responses(query, data, index, model, top_k=3)
+    retrieved_context = "\n".join([
+        f"Response {i+1}: {response}" for i, response in enumerate(retrieved_responses)
+    ])
+
+    # Final prompt
     prompt = f"""
     {SYSTEM_PROMPT_GENERAL}
 
@@ -133,22 +141,39 @@ def conversation_chat(query, data, index, model, g_model, cipher):
 
     User's Question: {query}
 
-    Relevant responses:
+    Relevant Responses:
     {retrieved_context}
 
-    Please provide an empathetic and helpful response tailored to the user's profile, concerns,Relevant responses and question.
+    Please provide an empathetic and helpful response tailored to the user's profile, concerns, relevant responses, and question.
     """
 
-    # Generate response
-    response = g_model.generate_content(
-    prompt,
-    request_options={"timeout": 30}
-)
+    # ✅ Call Gemini with timeout & safe fallback
+    try:
+        response = g_model.generate_content(
+            prompt,
+            request_options={"timeout": 30}
+        )
 
-    validated_response = response.text.strip()
+        # Extract properly
+        if hasattr(response, 'text'):
+            validated_response = response.text.strip()
+        elif hasattr(response, 'candidates'):
+            validated_response = response.candidates[0].content.parts[0].text.strip()
+        else:
+            validated_response = str(response).strip()
 
-    # Save to session state (only in memory)
+    except google.api_core.exceptions.DeadlineExceeded:
+        validated_response = "Sorry, my answer is taking too long. Please try asking again shortly."
+
+    except Exception as e:
+        validated_response = f"Oops, I ran into an error: {e}"
+
+    # ✅ Always append to session state memory safely
+    if 'chat_memory' not in st.session_state:
+        st.session_state['chat_memory'] = []
+
     st.session_state['chat_memory'].append({"user": query, "bot": validated_response})
+
     return validated_response
 
 def display_faqs():
