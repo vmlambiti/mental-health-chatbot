@@ -9,8 +9,11 @@ from data_loader import load_resources, load_encryption_key
 from chatbot_logic import conversation_chat, collect_user_profile, display_faqs
 
 import json
+
+# ✅ Load Firebase secrets safely from Streamlit secrets
 firebase_key = dict(st.secrets["firebase"])
 
+# ✅ Initialize Firebase Admin ONLY ONCE
 try:
     app = firebase_admin.get_app()
 except ValueError:
@@ -18,12 +21,12 @@ except ValueError:
     app = firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
     })
-    
-# ✅ NLP Resources
+
+# ✅ Load NLP Resources
 data, index, model, g_model = load_resources()
 cipher = load_encryption_key()
 
-# ✅ Streamlit page config
+# ✅ Streamlit Page Config
 st.set_page_config(
     page_title="Mental Health Support Chatbot",
     page_icon="🧠",
@@ -54,7 +57,7 @@ def display_chat_history():
     if 'history' not in st.session_state:
         st.session_state['history'] = []
     if 'chat_memory' not in st.session_state:
-        st.session_state['chat_memory'] = []  # ✅ FIX: safe to prevent KeyError!
+        st.session_state['chat_memory'] = []  # ✅ Fix KeyError!
 
     # ✅ Step 1: Collect user profile to get user_id
     collect_user_profile(cipher)
