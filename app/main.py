@@ -5,8 +5,8 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 import streamlit as st
-from .data_loader import load_resources, load_encryption_key
-from .chatbot_logic import conversation_chat, collect_user_profile, display_faqs
+from data_loader import load_resources, load_encryption_key
+from chatbot_logic import conversation_chat, collect_user_profile, display_faqs
 
 import json
 
