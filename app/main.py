@@ -10,10 +10,10 @@ from chatbot_logic import conversation_chat, collect_user_profile, display_faqs
 
 import json
 
-# ✅ Load Firebase secrets safely from Streamlit secrets
+# ✅ Load Firebase key from secrets
 firebase_key = dict(st.secrets["firebase"])
 
-# ✅ Initialize Firebase Admin ONLY ONCE
+# ✅ Initialize Firebase only once
 try:
     app = firebase_admin.get_app()
 except ValueError:
@@ -22,11 +22,11 @@ except ValueError:
         'databaseURL': 'https://mental-chatbot-f0047-default-rtdb.firebaseio.com/'
     })
 
-# ✅ Load NLP Resources
+# ✅ Load NLP models
 data, index, model, g_model = load_resources()
 cipher = load_encryption_key()
 
-# ✅ Streamlit Page Config
+# ✅ Streamlit page config
 st.set_page_config(
     page_title="Mental Health Support Chatbot",
     page_icon="🧠",
@@ -49,29 +49,27 @@ def load_chat_history(user_id):
 # ✅ 3️⃣  MAIN CHAT LOGIC
 # ===============================
 def display_chat_history():
-    # ✅ Ensure needed session keys exist
+    # ✅ Always use only 'history'
     if 'user_profile' not in st.session_state:
         st.session_state['user_profile'] = {}
     if 'greeted' not in st.session_state:
         st.session_state['greeted'] = False
     if 'history' not in st.session_state:
         st.session_state['history'] = []
-    if 'chat_memory' not in st.session_state:
-        st.session_state['chat_memory'] = []  # ✅ Fix KeyError!
 
-    # ✅ Step 1: Collect user profile to get user_id
+    # ✅ Step 1: Collect profile
     collect_user_profile(cipher)
     user_profile = st.session_state['user_profile']
     user_id = user_profile.get("name", "anonymous").replace(" ", "_").lower()
 
-    # ✅ Step 2: Load chat history from Firebase ONCE
+    # ✅ Step 2: Load history once
     if not st.session_state['history']:
         st.session_state['history'] = load_chat_history(user_id)
 
-    # ✅ Step 3: Display FAQs
+    # ✅ Step 3: FAQs
     display_faqs()
 
-    # ✅ Step 4: Greet once if needed
+    # ✅ Step 4: Greet once
     if not st.session_state['greeted'] and user_profile.get("name") and user_profile.get("specific_concern"):
         name = user_profile['name']
         concern = user_profile['specific_concern']
@@ -89,8 +87,6 @@ def display_chat_history():
 
         if submit_button and user_input:
             response = conversation_chat(user_input, data, index, model, g_model, cipher)
-            st.session_state['history'].append(("You", user_input))
-            st.session_state['history'].append(("Chatbot", response))
             save_chat_history(user_id, st.session_state['history'])
 
     with chat_placeholder:

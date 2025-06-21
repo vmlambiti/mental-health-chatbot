@@ -109,10 +109,9 @@ def conversation_chat(query, data, index, model, g_model, cipher):
         for example in FEW_SHOT_EXAMPLES
     ])
 
-    # Chat history
+    # 🔑 Use history consistently for prompt
     chat_history = "\n".join([
-        f"User: {entry['user']}\nBot: {entry['bot']}"
-        for entry in st.session_state.get('chat_memory', [])
+        f"{sender}: {message}" for sender, message in st.session_state.get('history', [])
     ])
 
     # Retrieve similar responses
@@ -154,7 +153,6 @@ def conversation_chat(query, data, index, model, g_model, cipher):
             request_options={"timeout": 30}
         )
 
-        # Extract properly
         if hasattr(response, 'text'):
             validated_response = response.text.strip()
         elif hasattr(response, 'candidates'):
@@ -163,25 +161,13 @@ def conversation_chat(query, data, index, model, g_model, cipher):
             validated_response = str(response).strip()
 
     except google.api_core.exceptions.DeadlineExceeded:
-        validated_response = "Sorry, my answer is taking too long. Please try asking again shortly."
+        validated_response = "Sorry, my answer is taking too long. Please try asking again."
 
     except Exception as e:
         validated_response = f"Oops, I ran into an error: {e}"
 
-    # ✅ Always append to session state memory safely
-    if 'chat_memory' not in st.session_state:
-        st.session_state['chat_memory'] = []
-
-    st.session_state['chat_memory'].append({"user": query, "bot": validated_response})
+    # ✅ Only use 'history' to keep consistent
+    st.session_state['history'].append(("You", query))
+    st.session_state['history'].append(("Chatbot", validated_response))
 
     return validated_response
-
-def display_faqs():
-    st.sidebar.markdown("## Frequently Asked Questions")
-    try:
-        faqs = pd.read_csv(FAQS_PATH)
-        for _, row in faqs.iterrows():
-            with st.sidebar.expander(row['Question']):
-                st.write(row['Answer'])
-    except FileNotFoundError:
-        st.sidebar.error("FAQs file not found. Please upload 'faqs.csv' to the specified directory.")
