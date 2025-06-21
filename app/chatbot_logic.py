@@ -171,3 +171,19 @@ def conversation_chat(query, data, index, model, g_model, cipher):
     st.session_state['history'].append(("Chatbot", validated_response))
 
     return validated_response
+def display_faqs():
+    import streamlit as st
+    import pandas as pd
+    import os
+
+    DATA_PATH = os.getenv("DATA_PATH", "data/")
+    FAQS_PATH = os.path.join(DATA_PATH, "faqs.csv")
+
+    st.sidebar.markdown("## Frequently Asked Questions")
+    try:
+        faqs = pd.read_csv(FAQS_PATH)
+        for _, row in faqs.iterrows():
+            with st.sidebar.expander(row['Question']):
+                st.write(row['Answer'])
+    except FileNotFoundError:
+        st.sidebar.error("FAQs file not found. Please upload 'faqs.csv'.")
