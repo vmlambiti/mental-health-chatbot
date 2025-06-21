@@ -1,12 +1,9 @@
-# ===============================
-# ✅ 1️⃣  IMPORTS & FIREBASE SETUP
-# ===============================
 import firebase_admin
 from firebase_admin import credentials, db
 
 import streamlit as st
-from data_loader import load_resources, load_encryption_key
-from chatbot_logic import conversation_chat, collect_user_profile, display_faqs
+from .data_loader import load_resources, load_encryption_key
+from .chatbot_logic import conversation_chat, collect_user_profile, display_faqs
 
 import json
 
@@ -33,9 +30,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# ===============================
-# ✅ 2️⃣  FIREBASE SAVE & LOAD
-# ===============================
+# === Save & load
 def save_chat_history(user_id, history):
     ref = db.reference(f'chats/{user_id}')
     ref.set(history)
@@ -45,9 +40,7 @@ def load_chat_history(user_id):
     data = ref.get()
     return data if data else []
 
-# ===============================
-# ✅ 3️⃣  MAIN CHAT LOGIC
-# ===============================
+# === Main chat
 def display_chat_history():
     if 'user_profile' not in st.session_state:
         st.session_state['user_profile'] = {}
@@ -92,9 +85,7 @@ def display_chat_history():
 
     st.write("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)
 
-# ===============================
-# ✅ 4️⃣  APP ENTRY POINT
-# ===============================
+# === Run
 def main():
     display_chat_history()
     st.markdown("---")
