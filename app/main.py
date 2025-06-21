@@ -49,7 +49,6 @@ def load_chat_history(user_id):
 # ✅ 3️⃣  MAIN CHAT LOGIC
 # ===============================
 def display_chat_history():
-    # ✅ Always use only 'history'
     if 'user_profile' not in st.session_state:
         st.session_state['user_profile'] = {}
     if 'greeted' not in st.session_state:
@@ -57,19 +56,15 @@ def display_chat_history():
     if 'history' not in st.session_state:
         st.session_state['history'] = []
 
-    # ✅ Step 1: Collect profile
     collect_user_profile(cipher)
     user_profile = st.session_state['user_profile']
     user_id = user_profile.get("name", "anonymous").replace(" ", "_").lower()
 
-    # ✅ Step 2: Load history once
     if not st.session_state['history']:
         st.session_state['history'] = load_chat_history(user_id)
 
-    # ✅ Step 3: FAQs
     display_faqs()
 
-    # ✅ Step 4: Greet once
     if not st.session_state['greeted'] and user_profile.get("name") and user_profile.get("specific_concern"):
         name = user_profile['name']
         concern = user_profile['specific_concern']
@@ -77,7 +72,6 @@ def display_chat_history():
         st.session_state['greeted'] = True
         save_chat_history(user_id, st.session_state['history'])
 
-    # ✅ Step 5: Chat UI
     st.header("Chat with Rianess Bot")
     chat_placeholder = st.container()
 
@@ -87,6 +81,8 @@ def display_chat_history():
 
         if submit_button and user_input:
             response = conversation_chat(user_input, data, index, model, g_model, cipher)
+            st.session_state['history'].append(("You", user_input))
+            st.session_state['history'].append(("Chatbot", response))
             save_chat_history(user_id, st.session_state['history'])
 
     with chat_placeholder:
